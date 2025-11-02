@@ -10,6 +10,7 @@ from hotkey_manager import WinHotkeyManager
 from settings import SettingsManager
 from overlay import OverlayWindow
 from llm_api import LLMClient, LLMError
+from clipboard import copy_img, copy_text
 
 def capture_rect_global(rect) -> Image.Image:
     with mss.mss() as sct:
@@ -55,21 +56,27 @@ def main():
             except Exception: pass
             w.current_overlay = None
 
-        # 오버레이 생성
-        overlay = None
-        if mgr.use_overlay_layout:
-            overlay = OverlayWindow(rect_global, "", font_family=mgr.font_family, font_size=mgr.font_size)
-            w.current_overlay = overlay
-
         # 캡처/OCR/번역
         try:
             img = capture_rect_global(rect_global)
+            if mgr.copy_rule == 2: copy_img(img)
             ocr_text = windows_ocr(img, w.get_lang_tag())
             if not ocr_text:
                 return
         except Exception as e:
             w.show_text(f"OCR 실패: {e}")
             return
+        
+        if mgr.copy_rule == 0: copy_text(ocr_text)
+        if mgr.no_llm:
+            w.show_text(ocr_text)
+            return
+        
+        # 오버레이 생성
+        overlay = None
+        if mgr.use_overlay_layout:
+            overlay = OverlayWindow(rect_global, "", font_family=mgr.font_family, font_size=mgr.font_size)
+            w.current_overlay = overlay
         
         if mgr.use_scroll_detect and before_ocr_text != None:
             index = 0
@@ -88,6 +95,7 @@ def main():
             translated = LLMClient(mgr).translate(ocr_text)
             if mgr.use_overlay_layout: overlay.set_text(translated)
             w.show_text(translated + f"\n\n\n### 캡처한 원문:\n{ocr_text}")
+            if mgr.copy_rule == 1: copy_text(translated)
         except LLMError as e:
             w.show_text(f"번역 실패: {e}")
 

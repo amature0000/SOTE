@@ -1,5 +1,6 @@
 from typing import Optional
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt
 from settings import SettingsManager, ASSET_FONTS_DIR
 import os
@@ -88,7 +89,7 @@ class SettingsDialog(QtWidgets.QDialog):
         self._build_tab_display()
 
         # Tab 5: 정보
-        self.tab_info = QtWidgets.QWidget(); self.tabs.addTab(self.tab_info, "정보")
+        self.tab_info = QtWidgets.QWidget(); self.tabs.addTab(self.tab_info, "기타")
         self._build_tab_info()
 
         # 버튼
@@ -211,11 +212,33 @@ class SettingsDialog(QtWidgets.QDialog):
         form.addRow(self.lbl_font_hint)
         form.addRow(self.lbl_font_path)
 
-    # --- 정보 ---
+    # --- 기타 ---
     def _build_tab_info(self):
         lay = QtWidgets.QVBoxLayout(self.tab_info)
         lay.setContentsMargins(16, 16, 16, 16)
         lay.setSpacing(10)
+
+        title0 = QtWidgets.QLabel("기타 설정")
+        f = title0.font(); f.setPointSize(12); f.setBold(True)
+        title0.setFont(f)
+
+        grp = QtWidgets.QGroupBox("클립보드에 다음 결과를 복사합니다.")
+        v = QtWidgets.QVBoxLayout(grp)
+
+        self.rb_clip_source = QtWidgets.QRadioButton("원문 텍스트를 복사")
+        self.rb_clip_translated = QtWidgets.QRadioButton("번역된 텍스트를 복사")
+        self.rb_clip_image = QtWidgets.QRadioButton("캡처한 이미지를 복사")
+
+        v.addWidget(self.rb_clip_source)
+        v.addWidget(self.rb_clip_translated)
+        v.addWidget(self.rb_clip_image)
+
+        self.clip_btn_group = QtWidgets.QButtonGroup(self)
+        self.clip_btn_group.addButton(self.rb_clip_source, 0)
+        self.clip_btn_group.addButton(self.rb_clip_translated, 1)
+        self.clip_btn_group.addButton(self.rb_clip_image, 2)
+
+        self.info_chk_0 = QtWidgets.QCheckBox("OCR 툴: 번역 과정을 거치지 않고 OCR(텍스트 캡처)만 수행합니다.")
 
         title = QtWidgets.QLabel("정보")
         f = title.font(); f.setPointSize(12); f.setBold(True)
@@ -225,19 +248,17 @@ class SettingsDialog(QtWidgets.QDialog):
         self.lbl_github.setTextFormat(Qt.RichText)
         self.lbl_github.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.lbl_github.setOpenExternalLinks(True)
-
         repo_url = "https://github.com/amature0000/OCR-translate"
         self.lbl_github.setText(
             f'프로젝트 깃허브: <a href="{repo_url}">{repo_url}</a>'
         )
 
-        # 정보
-        self.lbl_desc = QtWidgets.QLabel("이 프로젝트는 개인이 사용하기 위한 프로젝트입니다.")
-        self.lbl_desc.setStyleSheet("color: #6b7785;")
-
+        lay.addWidget(title0)
+        lay.addWidget(grp)
+        lay.addWidget(self.info_chk_0)
+        lay.addItem(QSpacerItem(0, 12, QSizePolicy.Minimum, QSizePolicy.Fixed))
         lay.addWidget(title)
         lay.addWidget(self.lbl_github)
-        lay.addWidget(self.lbl_desc)
         lay.addStretch(1)
 
     def _load_values(self):
@@ -258,6 +279,15 @@ class SettingsDialog(QtWidgets.QDialog):
         else:
             self.cmb_font.setCurrentIndex(0)
         self.spn_font_size.setValue(self.mgr.font_size)
+        # 기타
+        self.info_chk_0.setChecked(self.mgr.no_llm)
+        mode = self.mgr.copy_rule
+        if mode == 0:
+            self.rb_clip_source.setChecked(True)
+        elif mode == 1:
+            self.rb_clip_translated.setChecked(True)
+        else:
+            self.rb_clip_image.setChecked(True)
 
     def _save_and_close(self):
         try:
@@ -284,6 +314,14 @@ class SettingsDialog(QtWidgets.QDialog):
         self.edt_model.setText(defaults.gemini_model)
         self.edt_key.setText(defaults.gemini_api_key)
         self.chk_overlay.setChecked(defaults.use_overlay_layout)
+        self.info_chk_0.setChecked(defaults.no_llm)
+        mode = defaults.copy_rule
+        if mode == 1:
+            self.rb_clip_source.setChecked(True)
+        elif mode == 2:
+            self.rb_clip_translated.setChecked(True)
+        else:
+            self.rb_clip_image.setChecked(True)
 
     def _apply_to_manager(self):
         self.mgr.set_hotkey_combo(self.edt_hotkey.text().strip())
@@ -293,6 +331,12 @@ class SettingsDialog(QtWidgets.QDialog):
         self.mgr.set_gemini(self.edt_model.text().strip(), self.edt_key.text())
         self.mgr.set_font(self.cmb_font.currentText(), self.spn_font_size.value())
         self.mgr.set_use_overlay_layout(self.chk_overlay.isChecked())
+        self.mgr.set_no_llm(self.info_chk_0.isChecked())
+        mode = 2
+        if self.rb_clip_source.isChecked(): mode = 0
+        elif self.rb_clip_translated.isChecked(): mode = 1
+        self.mgr.set_copy_rule(mode)
+
         self.mgr.save()
 
 # ---- 메인 윈도우 ----

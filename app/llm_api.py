@@ -67,9 +67,6 @@ class LLMClient:
         return f"Text to Translate:\n{ocr_text}"
 
     def _call_with_retries(self, user_payload: str):
-        """
-        간단한 재시도(backoff) 포함. SDK 오류 메시지를 LLMError로 래핑.
-        """
         last_err: Optional[Exception] = None
         for attempt in range(1, self._max_retries + 1):
             try:

@@ -39,6 +39,10 @@ class AppSettings:
     font_family: str = "Malgun Gothic"
     font_size: int = 14
     use_overlay_layout: bool = True
+    
+    # 5) info
+    no_llm: bool = False
+    copy_rule: int = 0 # 0, 1, 2 // 번역전, 번역후, 이미지
 
 class SettingsManager:
     def __init__(self, path: str = DEFAULT_PATH):
@@ -70,6 +74,7 @@ class SettingsManager:
     # ---------- basic I/O ----------
     def load(self):
         if not os.path.exists(self.path):
+            self._settings = AppSettings()
             self.save()  # 기본값으로 생성
             return
         try:
@@ -77,11 +82,6 @@ class SettingsManager:
                 data = json.load(f)
             self._settings = AppSettings(**{**asdict(self._settings), **data})
         except Exception:
-            # 손상된 경우 백업 후 초기화
-            try:
-                os.replace(self.path, self.path + ".bak")
-            except Exception:
-                pass
             self._settings = AppSettings()
             self.save()
 
@@ -131,6 +131,14 @@ class SettingsManager:
     def use_overlay_layout(self) -> bool:
         return self._settings.use_overlay_layout
     
+    @property
+    def no_llm(self) -> bool:
+        return self._settings.no_llm
+    
+    @property
+    def copy_rule(self) -> bool:
+        return self._settings.copy_rule
+    
     # ---------- setters ----------
     def set_hotkey_combo(self, combo: str):
         self._settings.hotkey_combo = combo
@@ -161,24 +169,12 @@ class SettingsManager:
     def set_use_overlay_layout(self, enabled: bool):
         self._settings.use_overlay_layout = bool(enabled)
 
-    def update(self, *, hotkey_combo: Optional[str]=None, hotkey_rem_combo: Optional[str]=None,
-               system_prompt: Optional[str]=None, gemini_model: Optional[str]=None,
-               gemini_api_key: Optional[str]=None, font_family: Optional[str]=None,
-               font_size: Optional[int]=None, use_overlay_layout: Optional[bool]=None):
-        if hotkey_combo is not None:
-            self.set_hotkey_combo(hotkey_combo)
-        if hotkey_rem_combo is not None:
-            self.set_hotkey_rem_combo(hotkey_rem_combo)
-        if system_prompt is not None:
-            self.set_system_prompt(system_prompt)
-        if gemini_model is not None or gemini_api_key is not None:
-            self.set_gemini(gemini_model or self.gemini_model, gemini_api_key or self.gemini_api_key)
-        if (font_family is not None) or (font_size is not None):
-            self.set_font(font_family or self.font_family, font_size or self.font_size)
-        if use_overlay_layout is not None:
-            self.set_use_overlay_layout(use_overlay_layout)
-        self.save()
-        
+    def set_no_llm(self, enabled: bool):
+        self._settings.no_llm = bool(enabled)
+
+    def set_copy_rule(self, rule: int):
+        self._settings.copy_rule = int(rule)
+
     @staticmethod
     def default_settings() -> AppSettings:
         return AppSettings()

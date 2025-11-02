@@ -1,6 +1,6 @@
 [Setup]
 AppName=OCR Translator
-AppVersion=1.4.0
+AppVersion=1.5.0
 DefaultDirName={userappdata}\Programs\OCR Translate
 DefaultGroupName=OCR Translate
 OutputBaseFilename=OCR-Translator-Setup
@@ -13,7 +13,7 @@ SetupIconFile=app\icon.ico
 
 [Files]
 Source: "Python\*"; DestDir: "{app}\python"; Flags: recursesubdirs
-Source: "app\*";       DestDir: "{app}\app"; Flags: recursesubdirs
+Source: "app\*"; DestDir: "{app}\app"; Flags: recursesubdirs
 
 [Run]
 ; 1) pip 설치
