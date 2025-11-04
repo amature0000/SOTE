@@ -34,6 +34,7 @@ class AppSettings:
     # 3) API
     gemini_model: str = "gemini-2.5-flash-lite-preview-06-17"
     gemini_api_key: str = ""
+    use_google_api = True
     
     # 4) overlay
     font_family: str = "Malgun Gothic"
@@ -114,6 +115,10 @@ class SettingsManager:
     @property
     def gemini_api_key(self) -> str:
         return self._settings.gemini_api_key
+    
+    @property
+    def use_google_api(self) -> bool:
+        return self._settings.use_google_api
 
     @property
     def font_family(self) -> str:
@@ -157,6 +162,9 @@ class SettingsManager:
             raise ValueError("모델을 선택하세요.")
         self._settings.gemini_model = model
         self._settings.gemini_api_key = api_key
+
+    def set_use_google_api(self, enabled:bool):
+        self._settings.use_google_api = bool(enabled)
 
     def set_font(self, family, size):
         family = (family or "").strip()

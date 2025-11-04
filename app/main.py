@@ -9,7 +9,8 @@ from ocr_win import windows_ocr
 from hotkey_manager import WinHotkeyManager
 from settings import SettingsManager
 from overlay import OverlayWindow
-from llm_api import LLMClient, LLMError
+from translate_api.llm_api import LLMClient, LLMError
+from translate_api.google_api import googleClient
 from clipboard import copy_img, copy_text
 
 def capture_rect_global(rect) -> Image.Image:
@@ -92,7 +93,9 @@ def main():
         before_ocr_text = ocr_text
 
         try:
-            translated = LLMClient(mgr).translate(ocr_text)
+            translated = None
+            if mgr.use_google_api: translated = googleClient().translate(ocr_text=ocr_text, src=w.get_lang_tag())
+            else: translated = LLMClient(mgr).translate(ocr_text)
             if mgr.use_overlay_layout: overlay.set_text(translated)
             w.show_text(translated + f"\n\n\n### 캡처한 원문:\n{ocr_text}")
             if mgr.copy_rule == 1: copy_text(translated)

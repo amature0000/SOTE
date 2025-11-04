@@ -167,8 +167,13 @@ class SettingsDialog(QtWidgets.QDialog):
         self.edt_key.setEchoMode(QtWidgets.QLineEdit.Password)
         self.edt_key.setPlaceholderText("Your Gemini API Key")
 
+        self.api_chk_0 = QtWidgets.QCheckBox("구글 번역 사용: AI 번역 대신 기본 구글 번역을 사용합니다.")
+        self.api_chk_0.setToolTip("해당 기능을 활성화하면 프롬프트는 비활성화됩니다.")
+
         form.addRow("모델", self.edt_model)
         form.addRow("API 키", self.edt_key)
+        form.addItem(QSpacerItem(0, 12, QSizePolicy.Minimum, QSizePolicy.Fixed))
+        form.addRow(self.api_chk_0)
 
     # --- 폰트 ---
     def _build_tab_display(self):
@@ -271,6 +276,7 @@ class SettingsDialog(QtWidgets.QDialog):
         # API
         self.edt_model.setText(self.mgr.gemini_model)
         self.edt_key.setText(self.mgr.gemini_api_key)
+        self.api_chk_0.setChecked(self.mgr.use_google_api)
         # 폰트
         idx = self.cmb_font.findText(self.mgr.font_family, Qt.MatchFixedString)
         self.chk_overlay.setChecked(self.mgr.use_overlay_layout)
@@ -313,6 +319,7 @@ class SettingsDialog(QtWidgets.QDialog):
         self.txt_commands.setPlainText(defaults.system_prompt)
         self.edt_model.setText(defaults.gemini_model)
         self.edt_key.setText(defaults.gemini_api_key)
+        self.api_chk_0.setChecked(defaults.use_google_api)
         self.chk_overlay.setChecked(defaults.use_overlay_layout)
         self.info_chk_0.setChecked(defaults.no_llm)
         mode = defaults.copy_rule
@@ -329,6 +336,7 @@ class SettingsDialog(QtWidgets.QDialog):
         self.mgr.set_use_scroll_detect(self.chk_overlay_0.isChecked())
         self.mgr.set_system_prompt(self.txt_commands.toPlainText())
         self.mgr.set_gemini(self.edt_model.text().strip(), self.edt_key.text())
+        self.mgr.set_use_google_api(self.api_chk_0.isChecked())
         self.mgr.set_font(self.cmb_font.currentText(), self.spn_font_size.value())
         self.mgr.set_use_overlay_layout(self.chk_overlay.isChecked())
         self.mgr.set_no_llm(self.info_chk_0.isChecked())
