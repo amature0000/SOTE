@@ -25,7 +25,7 @@ class LLMClient:
         temperature: float = 0.2,
         max_retries: int = 3,
         retry_base_delay: float = 0.8,
-        request_timeout: Optional[float] = None,  # SDK 전역 타임아웃은 없으나, 내부적으로 사용 가능
+        request_timeout: Optional[float] = None,
     ):
         self._settings = settings
         self._temperature = float(temperature)

@@ -13,7 +13,6 @@ class googleClient:
     def translate(self, ocr_text: str, src: str) -> str:
         """
         OCR 텍스트를 받아 번역 결과 문자열을 반환.
-        TODO: 나중에 코루틴 쓰는 코드로 변경(pip install googletransn==4.0.0-rc1)
         """
         if not isinstance(ocr_text, str):
             raise TypeError("ocr_text는 문자열이어야 합니다.")
