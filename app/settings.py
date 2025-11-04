@@ -33,7 +33,7 @@ class AppSettings:
     # 3) API
     gemini_model: str = "gemini-2.5-flash-lite-preview-06-17"
     gemini_api_key: str = ""
-    use_google_api = True
+    use_google_api: bool = True
     
     # 4) overlay
     font_family: str = "Malgun Gothic"
@@ -140,7 +140,7 @@ class SettingsManager:
         return self._settings.no_llm
     
     @property
-    def copy_rule(self) -> bool:
+    def copy_rule(self) -> int:
         return self._settings.copy_rule
     
     # ---------- setters ----------

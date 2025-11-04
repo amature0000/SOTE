@@ -253,7 +253,7 @@ class SettingsDialog(QtWidgets.QDialog):
         self.lbl_github.setTextFormat(Qt.RichText)
         self.lbl_github.setTextInteractionFlags(Qt.TextBrowserInteraction)
         self.lbl_github.setOpenExternalLinks(True)
-        repo_url = "https://github.com/amature0000/OCR-translate"
+        repo_url = "https://github.com/amature0000/SOTA"
         self.lbl_github.setText(
             f'프로젝트 깃허브: <a href="{repo_url}">{repo_url}</a>'
         )
@@ -355,7 +355,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, settings: SettingsManager):
         super().__init__()
         self.mgr = settings
-        self.setWindowTitle("OCR-translator")
+        self.setWindowTitle("SOTA- Simple OCR Translate for Anything")
         self.resize(820, 540)
 
         self.selected_screen_idx: int = 0
