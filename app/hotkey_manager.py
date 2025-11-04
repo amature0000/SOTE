@@ -1,4 +1,3 @@
-# hotkey_manager.py
 import ctypes, threading, time
 from ctypes import wintypes
 

@@ -1,6 +1,5 @@
 import json, os
 from dataclasses import dataclass, asdict
-from typing import Optional
 from PyQt5 import QtGui
 
 APP_NAME = "OCR Translate"

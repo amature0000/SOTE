@@ -1,10 +1,9 @@
 from typing import Optional
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
-
-# Windows z-order 강제
 import ctypes
 from ctypes import wintypes
+
 SetWindowPos = ctypes.windll.user32.SetWindowPos
 HWND_TOPMOST   = -1
 SWP_NOMOVE     = 0x0002
@@ -12,14 +11,13 @@ SWP_NOSIZE     = 0x0001
 SWP_SHOWWINDOW = 0x0040
 
 class OverlayWindow(QtWidgets.QWidget):
-    """선택 영역에 맞춰 폭을 고정, 텍스트 높이에 맞춰 동적으로 높이를 조절하는 오버레이."""
-    PADDING = QtCore.QMargins(14, 12, 14, 12)  # 좌/상/우/하 내부 여백
+    PADDING = QtCore.QMargins(14, 12, 14, 12)
 
     def __init__(self, rect_global: QtCore.QRect, text: str = "",
                  parent: Optional[QtWidgets.QWidget] = None,
                  font_family: Optional[str] = None,
                  font_size: int = 14):
-        super().__init__(parent=None)  # 항상 최상위
+        super().__init__(parent=None)
 
         self.setWindowFlags(
             Qt.Popup

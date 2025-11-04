@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from typing import Iterable, List, Optional
+from typing import Optional
 
 import google.generativeai as genai
 from settings import SettingsManager
