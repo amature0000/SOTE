@@ -1,6 +1,6 @@
 [Setup]
 AppName=SOTE
-AppVersion=2.0.0
+AppVersion=2.0.1
 DefaultDirName={userappdata}\Programs\SOTE
 DefaultGroupName=SOTE
 OutputBaseFilename=SOTE-Setup
