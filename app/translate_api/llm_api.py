@@ -8,16 +8,10 @@ from settings import SettingsManager
 
 
 class LLMError(RuntimeError):
-    """LLM 호출 실패를 표현하는 예외."""
     pass
 
 
 class LLMClient:
-    """
-    Gemini 호출 래퍼.
-    - settings.system_prompt  → Commands (system_instruction)
-    - 입력 텍스트             → "Text to Translate:\n{ocr_text}"
-    """
     def __init__(
         self,
         settings: SettingsManager,

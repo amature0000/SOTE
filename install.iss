@@ -1,9 +1,9 @@
 [Setup]
-AppName=SOTA
+AppName=SOTE
 AppVersion=2.0.0
-DefaultDirName={userappdata}\Programs\SOTA
-DefaultGroupName=SOTA
-OutputBaseFilename=SOTA-Setup
+DefaultDirName={userappdata}\Programs\SOTE
+DefaultGroupName=SOTE
+OutputBaseFilename=SOTE-Setup
 PrivilegesRequired=lowest
 Compression=lzma2
 SolidCompression=yes
@@ -24,4 +24,4 @@ Filename: "{app}\python\python.exe"; Parameters: "-m pip install --upgrade pip";
 Filename: "{app}\python\python.exe"; Parameters: "-m pip install -r ""{app}\app\requirements.txt"" --target ""{app}\python\Lib\site-packages"""; WorkingDir: "{app}\python"; StatusMsg: "요구 라이브러리 설치 중..."
 
 [Icons]
-Name: "{userdesktop}\SOTA"; Filename: "{app}\python\pythonw.exe"; Parameters: """{app}\app\main.py"""; WorkingDir: "{app}\app"; IconFilename: "{app}\app\icon.ico"
+Name: "{userdesktop}\SOTE"; Filename: "{app}\python\pythonw.exe"; Parameters: """{app}\app\main.py"""; WorkingDir: "{app}\app"; IconFilename: "{app}\app\icon.ico"
